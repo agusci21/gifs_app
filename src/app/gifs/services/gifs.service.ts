@@ -1,7 +1,7 @@
 
 import { Injectable } from '@angular/core';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class GifsService {
     private _tagsHistory: string[] = []
 
@@ -12,6 +12,20 @@ export class GifsService {
     }
 
     public searchTag(tag: string) {
+        if (tag.length === 0) {
+            return
+        }
+        this.organizeHistory(tag)
+    }
+
+    private organizeHistory(tag: string) {
+        const limitOfTags = 10
+        tag = tag.toLowerCase()
+        
+        if (this.tagsHistory.includes(tag)) {
+            this._tagsHistory = this._tagsHistory.filter(e => e !== tag)
+        }
         this._tagsHistory.unshift(tag)
+        this._tagsHistory = this._tagsHistory.splice(0,limitOfTags)
     }
 }
