@@ -27,13 +27,12 @@ export class GifsService {
             .set('api_key', this._apiKey)
             .set('q', tag)
             .set('limit', '10')
-        // fetch(`https://api.giphy.com/v1/gifs/search?api_key=${this._apiKey}&q=${tag}&limit=10`).then(resp => resp.json()).then(data => console.log(data))
         this._httpClient.get<SearchResponse>(
             `${this._baseUrl}search`,
             { params, },)
             .subscribe(
                 resp => this.gifsList = resp.data,
-        )
+            )
     }
 
     private organizeHistory(tag: string) {
@@ -45,5 +44,10 @@ export class GifsService {
         }
         this._tagsHistory.unshift(tag)
         this._tagsHistory = this._tagsHistory.splice(0, limitOfTags)
+        this.saveInLocalStorage()
+    }
+
+    private saveInLocalStorage() {
+        localStorage.setItem('history', JSON.stringify(this._tagsHistory))
     }
 }
