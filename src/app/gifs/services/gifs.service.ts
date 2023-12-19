@@ -12,7 +12,9 @@ export class GifsService {
     private _tagsHistory: string[] = []
 
     public gifsList: Gif[] = []
-    public constructor(private _httpClient: HttpClient) { }
+    public constructor(private _httpClient: HttpClient) {
+        this.loadLocalStorage()
+    }
 
     public get tagsHistory() {
         return [...this._tagsHistory]
@@ -49,5 +51,17 @@ export class GifsService {
 
     private saveInLocalStorage() {
         localStorage.setItem('history', JSON.stringify(this._tagsHistory))
+    }
+
+    private loadLocalStorage() {
+        const history = localStorage.getItem('history')
+        if (!history) {
+            return
+        }
+
+        this._tagsHistory = JSON.parse(history)
+        if (this._tagsHistory.length > 0) {
+            this.searchTag(this._tagsHistory[0])
+        }
     }
 }
